@@ -1,0 +1,103 @@
+﻿body {
+}
+
+.keyboard 
+{
+    font-family: Arial, David, Tahoma;
+    border: 1px solid #06c;
+	direction: ltr;
+    padding: .3em;
+    font-size: 10pt;
+    width: 435px;
+    text-align: left;
+    background: #fff;
+    z-index: 9999;
+    position: absolute;
+}
+.keyboard a { text-decoration: none; }
+
+.keyboard .keyboard-controls { float: right; }
+.keyboard-rtl .keyboard-controls { float: left; direction: rtl; }
+.keyboard .keyboard-controls a
+{
+    width: 11px;
+    height: 11px;
+    margin: 1px;
+    font-size: 8pt;
+    border: 1px solid #06c;
+}
+.keyboard .keyboard-controls a:hover { background-color: #00f; }
+.keyboard .keyboard-minimize { background-position: 0 0; }
+.keyboard .keyboard-minimize:hover { background-position: 0 -10px; }
+.keyboard .keyboard-close { background-position: -11px 0; }
+.keyboard .keyboard-close:hover { background-position: -11px -10px;  }
+
+.keyboard h2 
+{
+    font-size: 11pt;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    line-height: 12pt;
+}
+.keyboard-rtl h2 { direction: rtl; text-align: right; }
+
+.keyboard .keyboard-keys { margin-top: 3px; padding: 2px; }
+.keyboard .keyboard-row { margin-bottom: 3px; }
+.keyboard .keyboard-row-2 { margin-left: 32px; }
+.keyboard .keyboard-row-3 { margin-left: 0; }
+.keyboard .keyboard-row-4 { margin-left: 0; }
+.keyboard .keyboard-row-5 { margin-left: 50px; }
+
+.keyboard .keyboard-button
+{
+    font-family: Arial, David, Tahoma;
+    font-size: 10pt;
+    border-radius: 2px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #999 #000 #000 #999;
+    margin-right: 2px;
+    width: 26px;
+    height: 22px;
+    line-height: 22px;
+    text-align: center;
+    display: inline-block;
+    color: #000;
+    vertical-align: middle;
+    
+    background: #999; /* for non-css3 browsers */
+
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f1f5f9', endColorstr='#d6dde5'); /* for IE */
+    background: -webkit-gradient(linear, left top, left bottom, from(#f1f5f9), to(#d6dde5)); /* for webkit browsers */
+    background: -moz-linear-gradient(top,  #f1f5f9,  #d6dde5); /* for firefox 3.6+ */ 
+}
+
+.keyboard .keyboard-button-active 
+{
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d6dde5', endColorstr='#f1f5f9'); /* for IE */
+    background: -webkit-gradient(linear, left top, left bottom, from(#d6dde5), to(#f1f5f9)); /* for webkit browsers */
+    background: -moz-linear-gradient(top,  #d6dde5,  #f1f5f9); /* for firefox 3.6+ */ 
+}
+
+.keyboard .keyboard-controls a,
+.keyboard .keyboard-button span
+{
+    display: inline-block;
+    background-image: url('keyboard-icons.png');
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+.keyboard .keyboard-button-bksp { width: 35px; }
+.keyboard .keyboard-button-bksp span { background-position: 0 -21px; width: 20px; height: 8px; margin-top: 6px; }
+
+.keyboard .keyboard-button-space { width: 300px; }
+.keyboard .keyboard-button-space span { display: none; }
+
+.keyboard .keyboard-button-caps { width: 45px; }
+
+.keyboard .keyboard-button-lshift,
+.keyboard .keyboard-button-rshift { width: 60px; }
+.keyboard .keyboard-button-lshift span,
+.keyboard .keyboard-button-rshift span { background-position: -22px 0; width: 15px; height: 16px; margin-top: 3px; }
