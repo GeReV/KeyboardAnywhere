@@ -1,8 +1,14 @@
 Virtual Keyboard Bookmarklet
+============================
 
 A Hebrew-English virtual keyboard to be embedded into any website using a bookmarklet.
 
-Copyright (C) 2012 Amir Grozki
+[Demo](http://gerev.github.com/KeyboardAnywhere/)
+
+Copyright &copy; 2012 Amir Grozki
+
+License
+-------
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
