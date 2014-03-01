@@ -1,7 +1,7 @@
 ﻿/*!
  * Keyboard
  *
- * Copyright 2011, Amir Grozki
+ * Copyright 2012-2014, Amir Grozki
  * Dual licensed under the MIT or GPL Version 2 licenses.
  * http://jquery.org/license
  */
@@ -30,7 +30,7 @@ window.keyboard.layouts = {
 };
 window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
 
-(function(window, document, jQuery) {
+(function(window, document, Zepto) {
 
   window.keyboard = window.keyboard || {};
   window.keyboard.widget = window.keyboard.widget || ( function Keyboard($, window, document, layout) {
@@ -41,7 +41,8 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
         'shift' : 16,
         'capslock' : 20,
         'space' : 32
-      }, defaults = {
+      }, 
+      defaults = {
         'lang' : 'en',
         'title' : 'English Keyboard',
         'direction' : window.keyboard.directions.ltr,
@@ -78,8 +79,20 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
             'key' : ' '
           }
         }
-      }, keyboardLayout = extend({}, defaults, layout), container = $(format('<div class="{0} {0}-{1} {0}-{2}"></div>', keyboardLayout.cssprefix, ((keyboardLayout.direction == window.keyboard.directions.ltr) ? 'ltr' : 'rtl'), keyboardLayout.lang)), keyMap = {}, focusedTextbox = $('textarea,input[type=text]')[0], // Select first textbox on the page as the default textbox
-      shiftKeys = null, shiftMode = false, capsLockMode = false, mousePressed = false, cssLoaded = false, keyboardVisible = false, mouseOffsetX = 0, mouseOffsetY = 0, specialKeyFunctions = {
+      }, 
+      keyboardLayout = extend({}, defaults, layout), 
+      container = $(format('<div class="{0} {0}-{1} {0}-{2}"></div>', keyboardLayout.cssprefix, ((keyboardLayout.direction == window.keyboard.directions.ltr) ? 'ltr' : 'rtl'), keyboardLayout.lang)), 
+      keyMap = {}, 
+      focusedTextbox = $('textarea,input[type=text]')[0], // Select first textbox on the page as the default textbox
+      shiftKeys = null, 
+      shiftMode = false, 
+      capsLockMode = false, 
+      mousePressed = false, 
+      cssLoaded = false, 
+      keyboardVisible = false, 
+      mouseOffsetX = 0, 
+      mouseOffsetY = 0, 
+      specialKeyFunctions = {
         8 : backspace, // Backspace
         20 : toggleCaps // Caps lock
       };
@@ -113,7 +126,12 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
       function createStylesheet(href, callback) {
 
         // Create stylesheet link
-        var head = document.getElementsByTagName( 'head' )[0], link = document.createElement('link'), isGecko = ('MozAppearance' in document.documentElement.style ), isWebkit = ('webkitAppearance' in document.documentElement.style ), sTimeout = window.setTimeout, done;
+        var head = document.getElementsByTagName( 'head' )[0],
+            link = document.createElement('link'), 
+            isGecko = ('MozAppearance' in document.documentElement.style ), 
+            isWebkit = ('webkitAppearance' in document.documentElement.style ), 
+            sTimeout = window.setTimeout, 
+            done;
 
         // Add attributes
         link.href = href;
@@ -263,9 +281,9 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
         for (var i = from; i <= to; i++) {
           key = keys.charAt(i);
 
-          button = $(format('<a class="{0}-button" href="#">{1}</a>', keyboardLayout.cssprefix, key.toUpperCase())).data({
-            'key' : key.charCodeAt(0)
-          });
+          button = $(format('<a class="{0}-button" href="#">{1}</a>', keyboardLayout.cssprefix, key.toUpperCase()));
+          
+          button.data('key', key.charCodeAt(0));
 
           container.append(button);
 
@@ -274,10 +292,11 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
       }
 
       function renderSpecialKey(container, key) {
-        var key = keyboardLayout.specialKeys[key], button = $(format('<a class="{0}-button {0}-button-{1}" href="#"><span>&nbsp;</span></a>', keyboardLayout.cssprefix, key.cssclass)).data({
-          'key' : key.code,
-          'cssclass' : key.cssclass
-        });
+        var key = keyboardLayout.specialKeys[key],
+        button = $(format('<a class="{0}-button {0}-button-{1}" href="#"><span>&nbsp;</span></a>', keyboardLayout.cssprefix, key.cssclass));
+        
+        button.data('key', key.code);
+        button.data('cssclass', key.cssclass);
 
         container.append(button);
 
@@ -288,9 +307,10 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
 
         draggable();
 
-        container.delegate('.' + keyboardLayout.cssprefix + '-button', 'click', function(evt) {
+        container.on('click', '.' + keyboardLayout.cssprefix + '-button', function(evt) {
 
-          var self = $(this), key = self.data('key');
+          var self = $(this), 
+              key = self.data('key');
 
           if (!focusedTextbox) {
             return true;
@@ -309,13 +329,14 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
           return false;
         });
 
-        container.delegate('.' + keyboardLayout.cssprefix + '-minimize', 'click', minimize);
-        container.delegate('.' + keyboardLayout.cssprefix + '-close', 'click', dispose);
+        container.on('click', '.' + keyboardLayout.cssprefix + '-minimize', minimize);
+        container.on('click', '.' + keyboardLayout.cssprefix + '-close', dispose);
 
-        $('textarea, input[type=text]').live({
-          'keypress.keyboard' : function(evt) {
+        $('textarea, input[type=text]').on({
+          'keypress.keyboard': function(evt) {
 
-            var charCode = ( typeof evt.which == "undefined") ? evt.keyCode : evt.which, convertedCharCode = null;
+            var charCode = ( typeof evt.which == "undefined") ? evt.keyCode : evt.which, 
+                convertedCharCode = null;
 
             if (isCtrlKeyPressed(evt)) {
               // Special case for ctrl key. i.e: ctrl+a, ctrl+z. Let browser handle it.
@@ -337,10 +358,10 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
 
             return result;
           },
-          'focus.keyboard' : function(evt) {
+          'focus.keyboard': function(evt) {
             focusedTextbox = this;
           },
-          'keydown.keyboard' : function(evt) {
+          'keydown.keyboard': function(evt) {
             var charCode = ( typeof evt.which == "undefined") ? evt.keyCode : evt.which;
 
             if (charCode == specialKeys.backspace) {
@@ -350,7 +371,7 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
           }
         });
 
-        $(document).bind({
+        $(document).on({
           'keyup.keyboard' : function(evt) {
             var charCode = ( typeof evt.which == "undefined") ? evt.keyCode : evt.which;
 
@@ -402,19 +423,26 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
               evt.stopPropagation();
             }
 
-            $(document).css('MozUserSelect', 'none').bind('selectstart mousedown', returnFalse);
+            $(document)
+              //.css('MozUserSelect', 'none')
+              .on('selectstart mousedown', returnFalse);
 
             return false;
           }
         });
 
-        $(document).mouseup(function(evt) {
-          if (evt.button == 0 || evt.button == 1) {
-            mousePressed = false;
-
-            $(document).css('MozUserSelect', '').unbind('selectstart mousedown', returnFalse);
-          }
-        }).mousemove(mousemove);
+        $(document).on({
+          mouseup: function(evt) {
+            if (evt.button == 0 || evt.button == 1) {
+              mousePressed = false;
+  
+              $(document)
+                //.css('MozUserSelect', '')
+                .off('selectstart mousedown', returnFalse);
+            }
+          },
+          mousemove: mousemove
+        });
       }
 
       function handleSpecialKey(keyCode, element) {
@@ -481,10 +509,10 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
             var r = document.selection.createRange();
             if (r == null) {
               return {
-                start : 0,
-                end : el.value.length,
-                length : 0
-              }
+                start: 0,
+                end: el.value.length,
+                length: 0
+              };
             }
 
             var re = el.createTextRange();
@@ -539,7 +567,9 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
       }
 
       function convertKeyCode(charCode) {
-        var state = getState(), charStr = String.fromCharCode(charCode), index = 0;
+        var state = getState(), 
+            charStr = String.fromCharCode(charCode), 
+            index = 0;
 
         switch (charCode) {
           case specialKeys.backspace:
@@ -642,7 +672,8 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
       }
 
       function isCapsLock(evt) {
-        var charCode = ( typeof evt.which == "undefined") ? evt.keyCode : evt.which, s = String.fromCharCode(charCode);
+        var charCode = (typeof evt.which == "undefined") ? evt.keyCode : evt.which,
+            s = String.fromCharCode(charCode);
 
         if (s.toUpperCase() === s && s.toLowerCase() !== s && !isShiftKeyPressed(evt)) {
           return true;
@@ -656,13 +687,11 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
       }
 
       function dispose() {
-        container.find(format('.{0}-button, .{0}-minimize, .{0}-close', keyboardLayout.cssprefix)).undelegate('click');
+        container.off('mousedown click').remove();
+        
+        $('textarea, input[type=text]').off('.keyboard');
 
-        $('textarea, input[type=text]').die('keypress.keyboard').die('focus.keyboard').die('keydown.keyboard');
-
-        container.unbind('mousedown').remove();
-
-        $(document).unbind('mouseup.keyboard').unbind('mousemove.keyboard').unbind('keyup.keyboard').unbind('keydown.keyboard');
+        $(document).off('.keyboard');
 
         keyboardVisible = false;
       }
@@ -736,4 +765,4 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
     }($, window, document, window.keyboard.defaultlayout));
   // keyboard.
 
-})(window, document, window.keyboard.$ || jQuery); 
+})(window, document, window.keyboard.$ || Zepto); 

@@ -5,7 +5,7 @@ A Hebrew-English virtual keyboard to be embedded into any website using a bookma
 
 [Demo](http://gerev.github.com/KeyboardAnywhere/)
 
-Copyright &copy; 2012 Amir Grozki
+Copyright &copy; 2012-2014 Amir Grozki
 
 License
 -------

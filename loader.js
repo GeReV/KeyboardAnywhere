@@ -32,19 +32,15 @@
 
 				return false;
 			}
-
-			function checkVersion(version) {
-				return ! (/^1\.([0-4])/.test(version));
-			}
 			
-			if (window.jQuery && checkVersion(jQuery.fn.jquery)) {
+			if (window.Zepto) {
 				include_js('keyboard.js');
 			} else {
-				var shouldNoConflict = ( !! window.jQuery ); // Already have an older jQuery around.
+				var shouldNoConflict = ( !! window.Zepto ); // Already have another Zepto around.
 				
-				include_js('jquery.min.js', function () {
+				include_js('zepto.js', function () {
 					if ( shouldNoConflict ) {
-						window.keyboard.$ = jQuery.noConflict(); // Only use a local copy of jQuery, if an already existing version has been overridden, return it to normal.
+						window.keyboard.$ = Zepto.noConflict(); // Only use a local copy of Zepto, if an already existing version has been overridden, return it to normal.
 					}
 					include_js('keyboard.js');
 				});
