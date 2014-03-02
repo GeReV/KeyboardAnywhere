@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <textarea cols="80" rows="5" id="test" name="test"></textarea>
+    <script src="DOMEventsLevel3.shim.js"></script>
+    <script>
+      var a = document.querySelectorAll('textarea')[0];
+      
+      window.addEventListener('keyup', function(e) {
+        if (e.target.nodeName === 'TEXTAREA') {
+          console.log(false);
+        }
+      }, false);
+      
+      window.addEventListener('keyup', function(e) {
+        if (e.target.nodeName === 'TEXTAREA') {
+          console.log(true);
+          e.stopPropagation();
+          e.preventDefault();
+        }
+      }, true);
+      
+      window.addEventListener('keydown', function(e) {
+        var ne;
+        
+        if (e.target.nodeName === 'TEXTAREA' && !e.hasOwnProperty('__key')) {          
+          if ((e.keyCode || e.which) == 66) {
+            e.stopPropagation();
+            e.preventDefault();
+          
+            ne = new KeyboardEvent('keydown', {
+              bubbles: true,
+              cancelable: true,
+              'key': 'c',
+              'char': 'c',
+              which: 67,
+              keyCode: 67,
+              keyIdentifier: 'U+0043'
+            });
+            
+            e.target.dispatchEvent(ne);
+          }
+        }
+      }, true);
+    </script>
+</body>
+</html>
