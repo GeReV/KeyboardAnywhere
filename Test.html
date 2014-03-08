@@ -39,7 +39,10 @@
               'char': 'c',
               which: 67,
               keyCode: 67,
-              keyIdentifier: 'U+0043'
+              keyIdentifier: 'U+0043',
+              target: e.target,
+              eventPhase: 2,
+              srcElement: e.srcElement
             });
             
             e.target.dispatchEvent(ne);

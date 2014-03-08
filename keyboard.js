@@ -41,7 +41,7 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
         'shift' : 16,
         'capslock' : 20,
         'space' : 32
-      }, 
+      },
       defaults = {
         'lang' : 'en',
         'title' : 'English Keyboard',
@@ -83,7 +83,7 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
       keyboardLayout = extend({}, defaults, layout), 
       container = $(format('<div class="{0} {0}-{1} {0}-{2}"></div>', keyboardLayout.cssprefix, ((keyboardLayout.direction == window.keyboard.directions.ltr) ? 'ltr' : 'rtl'), keyboardLayout.lang)), 
       keyMap = {}, 
-      focusedTextbox = $('textarea,input[type=text]')[0], // Select first textbox on the page as the default textbox
+      focusedTextbox = null,
       shiftKeys = null, 
       shiftMode = false, 
       capsLockMode = false, 
@@ -94,7 +94,9 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
       mouseOffsetY = 0, 
       specialKeyFunctions = {
         8 : backspace, // Backspace
-        20 : toggleCaps // Caps lock
+        16 : null,
+        20 : toggleCaps, // Caps lock
+        32 : space
       };
 
       /* Private functions */
@@ -306,6 +308,74 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
       function setupEvents() {
 
         draggable();
+        
+        var textboxKeyDown = function(e) {
+            var key = (e.key && e.key.charCodeAt(0)),
+              keyCode = e.which || e.keyCode;
+  
+            if (keyCode in specialKeyFunctions) {
+              return true;
+            }
+            
+            if (isCtrlKeyPressed(e)) {
+              // Special case for ctrl key. i.e: ctrl+a, ctrl+z. Let browser handle it.
+              return true;
+            }
+
+            if (isCapsLock(e)) {
+              caps();
+            }
+            
+            // Convert at the end, in case capslock mode has changed.
+
+            var result = keyPress(key, e.target);
+
+            if (shiftMode == true && !isShiftKeyPressed(e)) {
+              unshift();
+            }
+
+            return result;
+          },
+          textboxKeyUp = function(e) {
+            var charCode = e.which || e.keyCode;
+
+            if (charCode == specialKeys.capslock) {
+              specialKeyFunctions[specialKeys.capslock]();
+            }
+
+            if (charCode == specialKeys.shift && !isShiftKeyPressed(e)) {
+              // Keyup will fire once shift is unpressed, and mark it as unpressed.
+              unshift();
+            }
+          };
+        
+        document.addEventListener('focus', function(e) {
+          if (isTextbox(e.target)) {
+            if (focusedTextbox) {
+              focusedTextbox.removeEventListener('keyup', textboxKeyUp);
+              focusedTextbox.removeEventListener('keydown', textboxKeyDown);
+            } 
+            
+            focusedTextbox = e.target;
+            
+            focusedTextbox.addEventListener('keyup', textboxKeyUp, false);
+            focusedTextbox.addEventListener('keydown', textboxKeyDown, false);
+          }
+        }, true);
+        
+        document.addEventListener('blur', function(e) {
+          if (isTextbox(e.target)) {
+            if (focusedTextbox) {
+              focusedTextbox.removeEventListener('keyup', textboxKeyUp);
+              focusedTextbox.removeEventListener('keydown', textboxKeyDown);
+            }
+            
+            focusedTextbox = null;
+          }
+        }, true);
+        
+        document.addEventListener('keydown', createCaptureFunction('keydown'), true);
+        document.addEventListener('keypress', createCaptureFunction('keypress'), true);
 
         container.on('click', '.' + keyboardLayout.cssprefix + '-button', function(evt) {
 
@@ -331,65 +401,53 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
 
         container.on('click', '.' + keyboardLayout.cssprefix + '-minimize', minimize);
         container.on('click', '.' + keyboardLayout.cssprefix + '-close', dispose);
-
-        $('textarea, input[type=text]').on({
-          'keypress.keyboard': function(evt) {
-
-            var charCode = ( typeof evt.which == "undefined") ? evt.keyCode : evt.which, 
-                convertedCharCode = null;
-
-            if (isCtrlKeyPressed(evt)) {
-              // Special case for ctrl key. i.e: ctrl+a, ctrl+z. Let browser handle it.
-              return true;
-            }
-
-            if (isCapsLock(evt)) {
-              caps();
-            }
-
-            convertedCharCode = convertKeyCode(charCode);
-            // Convert at the end, in case capslock mode has changed.
-
-            var result = keyPress(convertedCharCode, this);
-
-            if (shiftMode == true && !isShiftKeyPressed(evt)) {
-              unshift();
-            }
-
-            return result;
-          },
-          'focus.keyboard': function(evt) {
-            focusedTextbox = this;
-          },
-          'keydown.keyboard': function(evt) {
-            var charCode = ( typeof evt.which == "undefined") ? evt.keyCode : evt.which;
-
-            if (charCode == specialKeys.backspace) {
-              specialKeyFunctions[specialKeys.backspace](this);
-              return false;
-            }
+      }
+      
+      function createCaptureFunction(type) {
+        return function(e) {
+          var convertedCharCode,
+            key = (e.key && e.key.charCodeAt(0)),
+            keyCode = e.which || e.keyCode,
+            ne;
+            
+          if (keyCode in specialKeyFunctions) {
+            specialKeyFunctions[keyCode] && specialKeyFunctions[keyCode](this);
+            return true;
           }
-        });
-
-        $(document).on({
-          'keyup.keyboard' : function(evt) {
-            var charCode = ( typeof evt.which == "undefined") ? evt.keyCode : evt.which;
-
-            if (charCode == specialKeys.capslock) {
-              specialKeyFunctions[specialKeys.capslock]();
-            }
-
-            if (charCode == specialKeys.shift && !isShiftKeyPressed(evt)) {
-              // Keyup will fire once shift is unpressed, and mark it as unpressed.
-              unshift();
-            }
-          },
-          'keydown.keyboard' : function(evt) {
-            if (isShiftKeyPressed(evt) && shiftMode === false) {
-              shift();
-            }
+          
+          if (isCtrlKeyPressed(e)) {
+            // Special case for ctrl key. i.e: ctrl+a, ctrl+z. Let browser handle it.
+            return true;
           }
-        });
+          
+          if (isShiftKeyPressed(e) && shiftMode === false) {
+            shift();
+          }
+          
+          convertedCharCode = convertKeyCode(key);
+          
+          if (key !== convertedCharCode && !e._kbanywhere) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            ne = new KeyboardEvent(type, {
+              bubbles: true,
+              cancelable: true,
+              'key': String.fromCharCode(convertedCharCode),
+              'char': String.fromCharCode(convertedCharCode),
+              which: convertedCharCode,
+              keyCode: convertedCharCode,
+              //keyIdentifier: 'U+0043',
+              target: e.target,
+              eventPhase: 2,
+              srcElement: e.srcElement
+            });
+            
+            ne._kbanywhere = true;
+            
+            e.target.dispatchEvent(ne);
+          }
+        };
       }
 
       function mousemove(evt) {
@@ -591,18 +649,11 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
       }
 
       function backspace(element) {
-        var sel = getInputSelection(element), selCount = sel.end - sel.start, start = ((selCount > 0) ? sel.start : sel.start - 1), val = element.value;
-
-        if (sel.start <= 0 && selCount <= 0) {
-          // Trying to backspace at the start.
-          return;
-        }
-
-        element.value = val.slice(0, start) + val.slice(sel.end);
-
-        setInputSelection(element, start, start);
-
         pressButton(keyMap['bksp']);
+      }
+      
+      function space(element) {
+        pressButton(keyMap[' ']);
       }
 
       function toggleCaps() {
@@ -659,6 +710,10 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
         } else {
           return '';
         }
+      }
+      
+      function isTextbox(node) {
+        return node.nodeName == 'TEXTAREA' || (node.nodeName == 'INPUT' && node.getAttribute('type') === 'text');
       }
 
       function isShiftKeyPressed(evt) {

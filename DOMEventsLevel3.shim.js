@@ -124,6 +124,11 @@ if( !function( global ) {
 			"bubbles": false,
 			"cancelable": false,
 			
+			"target": null,
+			"srcElement": null,
+			
+			"eventPhase": 1,
+			
 			"keyIdentifier": "",
 			"keyCode": 0,
 			"which": 0
