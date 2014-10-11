@@ -134,7 +134,7 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
       }
 
       function renderControls() {
-        container.prepend(format('<span class="{0}-controls"><a href="#" class="{0}-minimize">&nbsp;</a><a href="#" class="{0}-close">&nbsp;</a></span>', keyboardLayout.cssprefix));
+        container.prepend(format('<span class="{0}-controls"><a href="#" class="{0}-maximize">&nbsp;</a><a href="#" class="{0}-minimize">&nbsp;</a><a href="#" class="{0}-close">&nbsp;</a></span>', keyboardLayout.cssprefix));
       }
 
       function renderTitle() {
@@ -312,6 +312,7 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
         });
 
         container.on('click', '.' + keyboardLayout.cssprefix + '-minimize', minimize);
+        container.on('click', '.' + keyboardLayout.cssprefix + '-maximize', maximize);
         container.on('click', '.' + keyboardLayout.cssprefix + '-close', dispose);
       }
       
@@ -546,7 +547,15 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
       }
 
       function minimize() {
-        container.find('.' + keyboardLayout.cssprefix + '-keys').toggle();
+        container
+          .toggleClass(keyboardLayout.cssprefix + '-state-minimize')
+          .removeClass(keyboardLayout.cssprefix + '-state-maximize');
+      }
+      
+      function maximize() {
+        container
+          .toggleClass(keyboardLayout.cssprefix + '-state-maximize')
+          .removeClass(keyboardLayout.cssprefix + '-state-minimize');
       }
 
       function dispose() {

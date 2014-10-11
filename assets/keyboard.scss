@@ -9,6 +9,40 @@
   background: #fff;
   z-index: 9999;
   position: absolute;
+  
+  &.keyboard-state-minimize .keyboard-keys {
+    display: none;
+  }
+  
+  &.keyboard-state-maximize {
+    border: 0;
+    border-top: 1px solid #06c;
+    width: auto;
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    .keyboard-button {
+      font-size: 13pt;
+      width: 40px;
+      height: 33px;
+      line-height: 33px;
+    }
+    
+    .keyboard-button-bksp {
+      width: 60px;
+    }
+    
+    .keyboard-button-space {
+      width: 400px;
+    }
+    
+    .keyboard-button-lshift, .keyboard-button-rshift {
+      width: 70px;
+    }
+  }
 }
 .keyboard a {
   text-decoration: none;
@@ -62,6 +96,7 @@
 }
 .keyboard .keyboard-row {
   margin-bottom: 3px;
+  text-align: center;
 }
 .keyboard .keyboard-row-2 {
   margin-left: 32px;
