@@ -2,20 +2,23 @@
   "name": "KeyboardAnywhere",
   "version": "0.0.1",
   "description": "A Javascript bookmarklet for embedding a virtual keyboard in any website.",
-  "author": [{
-    "name": "Amir Grozki",
-    "url": " https://github.com/gerev"
-  }],
+  "author": [
+    {
+      "name": "Amir Grozki",
+      "url": " https://github.com/gerev"
+    }
+  ],
   "homepage": "https://gerev.github.com/KeyboardAnywhere",
-  "keywords": ["keyboard", 
-    "virtual", 
-    "bookmarklet", 
-    "hebrew", 
+  "keywords": [
+    "keyboard",
+    "virtual",
+    "bookmarklet",
+    "hebrew",
     "anywhere"
   ],
-  "repository": { 
+  "repository": {
     "type": "git",
-    "url" : "https://github.com/GeReV/KeyboardAnywhere.git"
+    "url": "https://github.com/GeReV/KeyboardAnywhere.git"
   },
   "license": "MIT",
   "devDependencies": {
@@ -24,6 +27,7 @@
     "grunt-contrib-uglify": "^0.5.0",
     "grunt-contrib-sass": "^0.7.3",
     "grunt-contrib-clean": "^0.5.0",
-    "grunt-autoprefixer": "^1.0.0"
+    "grunt-autoprefixer": "^1.0.0",
+    "grunt-contrib-copy": "^0.6.0"
   }
 }

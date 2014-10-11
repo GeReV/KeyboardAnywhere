@@ -106,7 +106,7 @@ window.keyboard.defaultlayout = window.keyboard.layouts.hebrew;
             createKeyboard();
           } else {
             $(function() {
-              createStylesheet('assets/keyboard.css', function() {
+              createStylesheet('build/keyboard.css', function() {
                 cssLoaded = true;
                 createKeyboard();
               });
