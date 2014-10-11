@@ -3,13 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title></title>
-    <script type="text/javascript" src="zepto.js"></script>
-    <script type="text/javascript" src="DOMEventsLevel3.shim.js"></script>
-    <script type="text/javascript" src="keyboard.js"></script>
+    <script type="text/javascript" src="src/zepto.js"></script>
+    <script type="text/javascript" src="src/"></script>
+    <script type="text/javascript" src="src/keyboard.js"></script>
 </head>
 <body>
-    <textarea cols="80" rows="5" id="test" name="test"></textarea>
-    <input type="text" name="test2" id="test" />
+    <textarea cols="80" rows="5" id="test-textarea" name="test">
+    </textarea>
+    <input type="text" name="test2" id="test-input" />
     <input type="button" name="test3" onclick="keyboard.widget.setLayout(keyboard.layouts.hebrew);" value="hebrew" />
     <input type="button" name="test4" onclick="keyboard.widget.setLayout(keyboard.layouts.english);" value="english" />
     <p>Sample text</p>

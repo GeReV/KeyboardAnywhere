@@ -34,15 +34,15 @@
 			}
 			
 			if (window.Zepto) {
-				include_js('keyboard.js');
+				include_js('src/keyboard.js');
 			} else {
 				var shouldNoConflict = ( !! window.Zepto ); // Already have another Zepto around.
 				
-				include_js('zepto.js', function () {
+				include_js('src/zepto.js', function () {
 					if ( shouldNoConflict ) {
 						window.keyboard.$ = Zepto.noConflict(); // Only use a local copy of Zepto, if an already existing version has been overridden, return it to normal.
 					}
-					include_js('keyboard.js');
+					include_js('src/keyboard.js');
 				});
 			}
 			

@@ -84,7 +84,7 @@
 .keyboard .keyboard-button span
 {
     display: inline-block;
-    background-image: url('keyboard-icons.png');
+    background-image: url('assets/keyboard-icons.png');
     background-color: transparent;
     background-repeat: no-repeat;
 }
