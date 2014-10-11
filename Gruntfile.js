@@ -8,7 +8,7 @@ module.exports = function(grunt) {
     },
     jshint: {
       "default": {
-        src: ['src/*.js']
+        src: ['src/keyboard.js', 'src/loader.js', 'src/utils.js']
       }
     },
     uglify: {
@@ -16,12 +16,10 @@ module.exports = function(grunt) {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
       },
       "default": {
-        files: [{
-          expand: true,
-          cwd: 'js',
-          src: 'src/*.js',
-          dest: 'build'
-        }]
+        files: {
+          "build/keyboard.js": ["src/DOMEventsLevel3.shim.js", "src/utils.js", "src/keyboard.js"],
+          "build/loader.js": "src/loader.js"
+        }
       }
     },
     sass: {

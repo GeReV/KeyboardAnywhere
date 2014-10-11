@@ -10,7 +10,9 @@
 					try {
 						succeed(file);
 					} catch (e) {
-						fail && fail();
+						if (fail) {
+						  fail();
+						}
 					}
 				};
 
@@ -48,7 +50,9 @@
 			
 			return {
 				'load': function(hide) {
-					window.keyboard.widget && window.keyboard.widget.init();
+					if (window.keyboard.widget) {
+					  window.keyboard.widget.init();
+					}
 				}
 			};
 		}());
