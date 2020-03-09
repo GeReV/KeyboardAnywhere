@@ -1,55 +1,10 @@
-function format(formatted) {
-        for (var i = 1; i < arguments.length; i++) {
-          var regexp = new RegExp('\\{' + (i - 1) + '\\}', 'gi');
-    formatted = formatted.replace(regexp, arguments[i]);
-  }
-  return formatted;
-}
-
-function extend(obj) {
-  each(Array.prototype.slice.call(arguments, 1), function(source) {
-    if (source) {
-      for (var prop in source) {
-        obj[prop] = source[prop];
-      }
-    }
-  });
-  return obj;
-}
-
-function each(obj, iterator, context) {
-  var nativeForEach = Array.prototype.forEach,
-      i;
-
-  if (obj === null)
-    return obj;
-  if (nativeForEach && obj.forEach === nativeForEach) {
-    obj.forEach(iterator, context);
-  } else if (obj.length === +obj.length) {
-    for (i = 0, length = obj.length; i < length; i++) {
-      if (iterator.call(context, obj[i], i, obj) === breaker)
-        return;
-    }
-  } else {
-    var keys = _.keys(obj);
-    for (i = 0, length = keys.length; i < length; i++) {
-      if (iterator.call(context, obj[keys[i]], keys[i], obj) === breaker)
-        return;
-    }
-  }
-  return obj;
-}
-
-
-
-function createStylesheet(href, callback) {
-
+export function createStylesheet(href: string, callback) {
   // Create stylesheet link
-  var head = document.getElementsByTagName( 'head' )[0],
-      link = document.createElement('link'), 
-      isGecko = ('MozAppearance' in document.documentElement.style ), 
-      isWebkit = ('webkitAppearance' in document.documentElement.style ), 
-      sTimeout = window.setTimeout, 
+  var head = document.getElementsByTagName('head')[0],
+      link = document.createElement('link'),
+      isGecko = ('MozAppearance' in document.documentElement.style ),
+      isWebkit = ('webkitAppearance' in document.documentElement.style ),
+      sTimeout = window.setTimeout,
       done;
 
   // Add attributes
@@ -133,8 +88,7 @@ function createStylesheet(href, callback) {
 
 
 
-function getInputSelection(el) {
-
+export function getInputSelection(el) {
   return (
 
     /* mozilla / dom 3.0 */('selectionStart' in el &&
@@ -189,18 +143,18 @@ function getInputSelection(el) {
 
 }
 
-function offsetToRangeCharacterMove(el, offset) {
+export function offsetToRangeCharacterMove(el, offset) {
   return offset - (el.value.slice(0, offset).split("\r\n").length - 1);
 }
 
-function setInputSelection(el, startOffset, endOffset) {
+export function setInputSelection(el: HTMLInputElement | HTMLTextAreaElement, startOffset: number, endOffset: number) {
   el.focus();
   if ( typeof el.selectionStart == "number" && typeof el.selectionEnd == "number") {
     el.selectionStart = startOffset;
     el.selectionEnd = endOffset;
   } else {
-    var range = el.createTextRange();
-    var startCharMove = offsetToRangeCharacterMove(el, startOffset);
+    const range = el.createTextRange();
+    const startCharMove = offsetToRangeCharacterMove(el, startOffset);
     range.collapse(true);
 
     if (startOffset == endOffset) {
@@ -214,25 +168,20 @@ function setInputSelection(el, startOffset, endOffset) {
   }
 }
 
-
-
-
-
-function isTextbox(node) {
+export function isTextbox(node) {
   return node.nodeName == 'TEXTAREA' || (node.nodeName == 'INPUT' && node.getAttribute('type') === 'text');
 }
 
-function isShiftKeyPressed(evt) {
-  return evt.shiftKey === true || !!(evt.modifiers & 4);
-  // Also considers some legacy browsers.
+export function isShiftKeyPressed(evt: KeyboardEvent | MouseEvent): boolean {
+  return evt.shiftKey;
 }
 
-function isCtrlKeyPressed(evt) {
+export function isCtrlKeyPressed(evt) {
   return evt.ctrlKey === true || !!(evt.modifiers & 2);
   // Also considers some legacy browsers.
 }
 
-function isCapsLock(evt) {
+export function isCapsLock(evt) {
   var charCode = (typeof evt.which == "undefined") ? evt.keyCode : evt.which,
       s = String.fromCharCode(charCode);
 
@@ -241,4 +190,22 @@ function isCapsLock(evt) {
   }
 
   return false;
+}
+
+export function emptyElement(el: Element) {
+  while (el.firstChild) {
+    el.removeChild(el.lastChild);
+  }
+}
+
+export function createElement(tag: string, className: string, textContent?: string): HTMLElement {
+  const el = document.createElement(tag);
+
+  el.classList.add(className);
+
+  if (textContent) {
+    el.textContent = textContent;
+  }
+
+  return el;
 }
